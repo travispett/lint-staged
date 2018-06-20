@@ -1,14 +1,10 @@
 {
   "name": "lint-staged",
-  "version": "0.0.0-development",
+  "version": "7.2.0",
   "description": "Lint files staged by git",
   "license": "MIT",
-  "repository": "https://github.com/okonet/lint-staged",
-  "author": "Andrey Okonetchnikov <andrey@okonet.ru>",
-  "maintainers": [
-    "Lufty Wiranda <lufty.wiranda@gmail.com>",
-    "Suhas Karanth <sudo.suhas@gmail.com>"
-  ],
+  "repository": "https://github.com/travispett/lint-staged",
+  "author": "Travis Pett <travispett@gmail.com>",
   "engines": {
     "node": ">=6"
   },
