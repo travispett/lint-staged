@@ -1,8 +1,12 @@
-# 🚫💩 lint-staged [![Build Status for Linux](https://travis-ci.org/okonet/lint-staged.svg?branch=master)](https://travis-ci.org/okonet/lint-staged) [![Build Status for Windows](https://ci.appveyor.com/api/projects/status/github/okonet/lint-staged?branch=master&svg=true)](https://ci.appveyor.com/project/okonet/lint-staged) [![npm version](https://badge.fury.io/js/lint-staged.svg)](https://badge.fury.io/js/lint-staged) [![Codecov](https://codecov.io/gh/okonet/lint-staged/branch/master/graph/badge.svg)](https://codecov.io/gh/okonet/lint-staged)
+# lint-staged
 
-Run linters against staged git files and don't let :poop: slip into your code base!
+This package is a fork of [lint-staged](https://github.com/okonet/lint-staged).
+It was forked to add two things:
 
-The latest versions of `lint-staged` require Node.js v6 or newer. (Versions of `lint-staged` prior to v7 still work with Node.js v4.)
+- The ability to lint not only staged files, but modified files as well (the output of `git status`).
+- stdout logging from linters. The original package only logged to stdout when the linter process returned an exit code of 1 (lint errors present). This package logs all output, so warnings will show too.
+
+This requires Node 6+.
 
 ## Why
 
@@ -12,17 +16,17 @@ This project contains a script that will run arbitrary shell tasks with a list o
 
 ## Related blogs posts and talks
 
-* [Make Linting Great Again](https://medium.com/@okonetchnikov/make-linting-great-again-f3890e1ad6b8#.8qepn2b5l)
-* [Running Jest Tests Before Each Git Commit](https://benmccormick.org/2017/02/26/running-jest-tests-before-each-git-commit/)
-* [AgentConf: Make Linting Great Again](https://www.youtube.com/watch?v=-mhY7e-EsC4)
+- [Make Linting Great Again](https://medium.com/@okonetchnikov/make-linting-great-again-f3890e1ad6b8#.8qepn2b5l)
+- [Running Jest Tests Before Each Git Commit](https://benmccormick.org/2017/02/26/running-jest-tests-before-each-git-commit/)
+- [AgentConf: Make Linting Great Again](https://www.youtube.com/watch?v=-mhY7e-EsC4)
 
 > If you've written one, please submit a PR with the link to it!
 
 ## Installation and setup
 
-> A fast way to perform the below is to run `npx mrm lint-staged`. It does most of the setup for you.
+> A fast way to perform the below is to run `npx mrm @travispett/lint-staged`. It does most of the setup for you.
 
-1.  `npm install --save-dev lint-staged husky`
+1.  `npm install --save-dev @travispett/lint-staged husky`
 1.  Install and setup your linters just like you would do normally. Add appropriate `.eslintrc`, `.stylelintrc`, etc.
 1.  Update your `package.json` like this:
 
@@ -76,20 +80,20 @@ $ ./node_modules/.bin/lint-staged --help
     -h, --help           output usage information
 ```
 
-* **`--config [path]`**: This can be used to manually specify the `lint-staged` config file location. However, if the specified file cannot be found, it will error out instead of performing the usual search. You may pass a npm package name for configuration also.
-* **`--debug`**: Enabling the debug mode does the following:
-  * `lint-staged` uses the [debug](https://github.com/visionmedia/debug) module internally to log information about staged files, commands being executed, location of binaries etc. Debug logs, which are automatically enabled by passing the flag, can also be enabled by setting the environment variable `$DEBUG` to `lint-staged*`.
-  * Use the [`verbose` renderer](https://github.com/SamVerschueren/listr-verbose-renderer) for `listr`.
-  * Do not pass `--silent` to npm scripts.
+- **`--config [path]`**: This can be used to manually specify the `lint-staged` config file location. However, if the specified file cannot be found, it will error out instead of performing the usual search. You may pass a npm package name for configuration also.
+- **`--debug`**: Enabling the debug mode does the following:
+  - `lint-staged` uses the [debug](https://github.com/visionmedia/debug) module internally to log information about staged files, commands being executed, location of binaries etc. Debug logs, which are automatically enabled by passing the flag, can also be enabled by setting the environment variable `$DEBUG` to `lint-staged*`.
+  - Use the [`verbose` renderer](https://github.com/SamVerschueren/listr-verbose-renderer) for `listr`.
+  - Do not pass `--silent` to npm scripts.
 
 ## Configuration
 
 Starting with v3.1 you can now use different ways of configuring it:
 
-* `lint-staged` object in your `package.json`
-* `.lintstagedrc` file in JSON or YML format
-* `lint-staged.config.js` file in JS format
-* Pass a configuration file using the `--config` or `-c` flag
+- `lint-staged` object in your `package.json`
+- `.lintstagedrc` file in JSON or YML format
+- `lint-staged.config.js` file in JS format
+- Pass a configuration file using the `--config` or `-c` flag
 
 See [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) for more details on what formats are supported.
 
@@ -129,13 +133,13 @@ To set options and keep lint-staged extensible, advanced format can be used. Thi
 
 ## Options
 
-* `concurrent` — _true_ — runs linters for each glob pattern simultaneously. If you don’t want this, you can set `concurrent: false`
-* `chunkSize` — Max allowed chunk size based on number of files for glob pattern. This option is only applicable on Windows based systems to avoid command length limitations. See [#147](https://github.com/okonet/lint-staged/issues/147)
-* `globOptions` — `{ matchBase: true, dot: true }` — [micromatch options](https://github.com/micromatch/micromatch#options) to
+- `concurrent` — _true_ — runs linters for each glob pattern simultaneously. If you don’t want this, you can set `concurrent: false`
+- `chunkSize` — Max allowed chunk size based on number of files for glob pattern. This option is only applicable on Windows based systems to avoid command length limitations. See [#147](https://github.com/okonet/lint-staged/issues/147)
+- `globOptions` — `{ matchBase: true, dot: true }` — [micromatch options](https://github.com/micromatch/micromatch#options) to
   customize how glob patterns match files.
-* `ignore` - `['**/docs/**/*.js']` - array of glob patterns to entirely ignore from any task.
-* `linters` — `Object` — keys (`String`) are glob patterns, values (`Array<String> | String`) are commands to execute.
-* `subTaskConcurrency` — `1` — Controls concurrency for processing chunks generated for each linter. This option is only applicable on Windows. Execution is **not** concurrent by default(see [#225](https://github.com/okonet/lint-staged/issues/225))
+- `ignore` - `['**/docs/**/*.js']` - array of glob patterns to entirely ignore from any task.
+- `linters` — `Object` — keys (`String`) are glob patterns, values (`Array<String> | String`) are commands to execute.
+- `subTaskConcurrency` — `1` — Controls concurrency for processing chunks generated for each linter. This option is only applicable on Windows. Execution is **not** concurrent by default(see [#225](https://github.com/okonet/lint-staged/issues/225))
 
 ## Filtering files
 
@@ -158,10 +162,10 @@ It is possible to run linters for certain paths only by using glob patterns. [mi
 
 When matching, `lint-staged` will do the following
 
-* Resolve the git root automatically, no configuration needed.
-* Pick the staged files which are present inside the project directory.
-* Filter them using the specified glob patterns.
-* Pass absolute paths to the linters as arguments.
+- Resolve the git root automatically, no configuration needed.
+- Pick the staged files which are present inside the project directory.
+- Filter them using the specified glob patterns.
+- Pass absolute paths to the linters as arguments.
 
 **NOTE:** `lint-staged` will pass _absolute_ paths to the linters to avoid any confusion in case they're executed in a different working directory (i.e. when your `.git` directory isn't the same as your `package.json` directory).
 
