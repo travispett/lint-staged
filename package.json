@@ -1,6 +1,6 @@
 {
   "name": "@travispett/lint-staged",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "description": "Lint files staged by git",
   "license": "MIT",
   "repository": "https://github.com/travispett/lint-staged",
