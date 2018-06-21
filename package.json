@@ -5,6 +5,9 @@
   "license": "MIT",
   "repository": "https://github.com/travispett/lint-staged",
   "author": "Travis Pett <travispett@gmail.com>",
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=6"
   },
