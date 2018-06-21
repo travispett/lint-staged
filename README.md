@@ -1,5 +1,7 @@
 # lint-staged
 
+## Fork notes
+
 This package is a fork of [lint-staged](https://github.com/okonet/lint-staged).
 It was forked to add two things:
 
@@ -7,6 +9,22 @@ It was forked to add two things:
 - stdout logging from linters. The original package only logged to stdout when the linter process returned an exit code of 1 (lint errors present). This package logs all output, so warnings will show too.
 
 This requires Node 6+.
+
+My usage is installing globally and running via command line with a `.lintstagedrc` file in the current directory.
+
+Install with:
+
+```sh
+npm i -g @travispett/lint-staged
+```
+
+Then run with:
+
+```sh
+lint-staged -c .lintstagedrc
+```
+
+Other options listed below should still work.
 
 ## Why
 
