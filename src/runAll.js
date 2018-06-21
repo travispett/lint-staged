@@ -1,9 +1,8 @@
 'use strict'
 
-const sgf = require('staged-git-files')
+const git = require('simple-git/promise')
 const Listr = require('listr')
 const has = require('lodash/has')
-const pify = require('pify')
 const makeCmdTasks = require('./makeCmdTasks')
 const generateTasks = require('./generateTasks')
 const resolveGitDir = require('./resolveGitDir')
@@ -26,44 +25,47 @@ module.exports = function runAll(config) {
   const gitDir = resolveGitDir()
   debug('Resolved git directory to be `%s`', gitDir)
 
-  sgf.cwd = gitDir
-  return pify(sgf)('ACM').then(files => {
-    /* files is an Object{ filename: String, status: String } */
-    const filenames = files.map(file => file.filename)
-    debug('Loaded list of staged files in git:\n%O', filenames)
+  return git(gitDir)
+    .status()
+    .then(status => {
+      // status.files is an Object{ path: String, index: String }
+      const filenames = status.files
+        .filter(file => file.index !== 'D' || file.index !== 'R')
+        .map(file => file.path)
+      debug('Loaded list of changed files in git:\n%O', filenames)
 
-    const tasks = generateTasks(config, filenames).map(task => ({
-      title: `Running tasks for ${task.pattern}`,
-      task: () =>
-        new Listr(
-          makeCmdTasks(task.commands, task.fileList, {
-            chunkSize,
-            subTaskConcurrency
-          }),
-          {
-            // In sub-tasks we don't want to run concurrently
-            // and we want to abort on errors
-            dateFormat: false,
-            concurrent: false,
-            exitOnError: true
+      const tasks = generateTasks(config, filenames).map(task => ({
+        title: `Running tasks for ${task.pattern}`,
+        task: () =>
+          new Listr(
+            makeCmdTasks(task.commands, task.fileList, {
+              chunkSize,
+              subTaskConcurrency
+            }),
+            {
+              // In sub-tasks we don't want to run concurrently
+              // and we want to abort on errors
+              dateFormat: false,
+              concurrent: false,
+              exitOnError: true
+            }
+          ),
+        skip: () => {
+          if (task.fileList.length === 0) {
+            return `No staged files match ${task.pattern}`
           }
-        ),
-      skip: () => {
-        if (task.fileList.length === 0) {
-          return `No staged files match ${task.pattern}`
+          return false
         }
-        return false
-      }
-    }))
+      }))
 
-    if (tasks.length) {
-      return new Listr(tasks, {
-        dateFormat: false,
-        concurrent,
-        renderer,
-        exitOnError: !concurrent // Wait for all errors when running concurrently
-      }).run()
-    }
-    return 'No tasks to run.'
-  })
+      if (tasks.length) {
+        return new Listr(tasks, {
+          dateFormat: false,
+          concurrent,
+          renderer,
+          exitOnError: !concurrent // Wait for all errors when running concurrently
+        }).run()
+      }
+      return 'No tasks to run.'
+    })
 }

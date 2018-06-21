@@ -81,7 +81,10 @@ module.exports = function resolveTaskFn(options) {
     debug('%s  OS: %s; File path chunking unnecessary', symbols.success, process.platform)
     return () =>
       execLinter(bin, args, execaOptions, pathsToLint).then(result => {
-        if (!result.failed) return successMsg(linter)
+        if (!result.failed) {
+          console.log(result.stdout)
+          return successMsg(linter)
+        }
 
         throw makeErr(linter, result.stdout, result.stderr)
       })

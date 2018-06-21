@@ -1,6 +1,6 @@
 {
   "name": "lint-staged",
-  "version": "7.2.0",
+  "version": "8.0.0",
   "description": "Lint files staged by git",
   "license": "MIT",
   "repository": "https://github.com/travispett/lint-staged",
@@ -42,9 +42,8 @@
     "npm-which": "^3.0.1",
     "p-map": "^1.1.1",
     "path-is-inside": "^1.0.2",
-    "pify": "^3.0.0",
     "please-upgrade-node": "^3.0.2",
-    "staged-git-files": "1.1.1",
+    "simple-git": "1.96.0",
     "string-argv": "^0.0.2",
     "stringify-object": "^3.2.2"
   },
